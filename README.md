@@ -84,8 +84,6 @@ The output is a GeoTIFF file containing the depression‑filled DEM. Statistics 
 - **Compiler**: Microsoft Visual Studio 2022 (version 17.x)
 - **GDAL version**: 3.7.0
 
-The code has also been successfully compiled on **Ubuntu 22.04** with `g++ 11.4.0` and GDAL 3.4.1 using the provided Makefile.
-
 ## Notes
 
 - The P&D algorithm is now included (see `FillDEM_PD.cpp`). It follows the iterative approach described in Planchon & Darboux (2002).
