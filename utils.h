@@ -1,4 +1,4 @@
-#ifndef UTILS_HEAD_H
+﻿#ifndef UTILS_HEAD_H
 #define UTILS_HEAD_H
 
 #include "gdal_priv.h"
@@ -6,6 +6,9 @@
 #include <algorithm>
 #include "dem.h"
 
+// 添加方向数组的外部声明
+extern const int dx[8];
+extern const int dy[8];
 
 void calculateStatistics(const CDEM& dem, double* min, double* max, double* mean, double* stdDev);
 
@@ -64,14 +67,14 @@ public:
 		flagArray[bIndex] |= value[bShift];
 		flag.flagArray[bIndex] |= value[bShift];
 	}
-	int IsProcessed(int row, int col)
+	int IsProcessed(int row, int col) const
 	{
 		//if the cell is outside the DEM, is is regared as processed
 		if (row < 0 || row >= height || col < 0 || col >= width) return true;
 		int index = row * width + col;
 		return flagArray[index / 8] & value[index % 8];
 	}
-	int IsProcessedDirect(int row, int col)
+	int IsProcessedDirect(int row, int col) const
 	{
 		int index = row * width + col;
 		return flagArray[index / 8] & value[index % 8];

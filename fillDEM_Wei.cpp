@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <fstream>
 #include <queue>
@@ -15,22 +15,25 @@ using namespace std;
 
 typedef std::vector<Node> NodeVector;
 typedef std::priority_queue<Node, NodeVector, Node::Greater> PriorityQueue;
-
-size_t priorityNodes2 = 0;   // ���ȶ��д洢�Ľڵ����ֵ
+size_t priorityNodes = 0;
+// 添加安全访问宏
+#define SAFE_ACCESS(row, col, height, width) \
+    ((row) >= 0 && (row) < static_cast<int>(height) && \
+     (col) >= 0 && (col) < static_cast<int>(width))
 
 void InitPriorityQue(CDEM& dem, Flag& flag, PriorityQueue& priorityQueue)
 {
-	int width = dem.Get_NX();
-	int height = dem.Get_NY();
+	const size_t width = dem.Get_NX();
+	const size_t height = dem.Get_NY();
 	Node tmpNode;
 	int iRow, iCol, row, col;
 
 	queue<Node> depressionQue;
 
 	// push border cells into the PQ
-	for (row = 0; row < height; row++)
+	for (row = 0; row < static_cast<int>(height); row++)
 	{
-		for (col = 0; col < width; col++)
+		for (col = 0; col < static_cast<int>(width); col++)
 		{
 			if (flag.IsProcessedDirect(row, col)) continue;
 
@@ -40,34 +43,37 @@ void InitPriorityQue(CDEM& dem, Flag& flag, PriorityQueue& priorityQueue)
 				{
 					iRow = Get_rowTo(i, row);
 					iCol = Get_colTo(i, col);
-					if (flag.IsProcessed(iRow, iCol)) continue;
-					if (!dem.is_NoData(iRow, iCol))
-					{
-						tmpNode.row = iRow;
-						tmpNode.col = iCol;
-						tmpNode.spill = dem.asFloat(iRow, iCol);
-						priorityQueue.push(tmpNode);
-						priorityNodes2++;
-						flag.SetFlag(iRow, iCol);
+					// 严格边界检查
+					if (!SAFE_ACCESS(iRow, iCol, height, width) ||
+						flag.IsProcessed(iRow, iCol) ||
+						dem.is_NoData(iRow, iCol)) {
+						continue;
 					}
+
+					tmpNode.row = iRow;
+					tmpNode.col = iCol;
+					tmpNode.spill = dem.asFloat(iRow, iCol);
+					priorityQueue.push(tmpNode);
+					priorityNodes++;
+
+					flag.SetFlag(iRow, iCol);
 				}
 			}
 			else
 			{
-				if (row == 0 || row == height - 1 || col == 0 || col == width - 1) {
+				if (row == 0 || row == static_cast<int>(height) - 1 || col == 0 || col == static_cast<int>(width) - 1) {
 					//on the DEM border
 					tmpNode.row = row;
 					tmpNode.col = col;
 					tmpNode.spill = dem.asFloat(row, col);
 					priorityQueue.push(tmpNode);
-					priorityNodes2++;
+					priorityNodes++;
 					flag.SetFlag(row, col);
 				}
 			}
 		}
 	}
 }
-
 void ProcessTraceQue(CDEM& dem, Flag& flag, queue<Node>& traceQueue, PriorityQueue& priorityQueue)
 {
 	bool HaveSpillPathOrLowerSpillOutlet;
@@ -83,6 +89,7 @@ void ProcessTraceQue(CDEM& dem, Flag& flag, queue<Node>& traceQueue, PriorityQue
 		traceQueue.pop();
 		noderow = node.row;
 		nodecol = node.col;
+		//initialize all masks as false	
 		bool Mask[5][5] = { {false},{false},{false},{false},{false} };
 		for (i = 0; i < 8; i++) {
 			iRow = Get_rowTo(i, noderow);
@@ -96,7 +103,8 @@ void ProcessTraceQue(CDEM& dem, Flag& flag, queue<Node>& traceQueue, PriorityQue
 				flag.SetFlag(iRow, iCol);
 			}
 			else {
-				//initialize all masks as false		
+				//如果单元格 i 是一个洼地单元格，判断它是否有一个溢流路径，或者是否有一个比节点更低的溢流出口。	
+				//所有已处理的邻居都没有比当前单元格更低的高程
 				HaveSpillPathOrLowerSpillOutlet = false; //whether cell i has a spill path or a lower spill outlet than node if i is a depression cell
 				for (k = 0; k < 8; k++) {
 					kRow = Get_rowTo(k, iRow);
@@ -114,9 +122,9 @@ void ProcessTraceQue(CDEM& dem, Flag& flag, queue<Node>& traceQueue, PriorityQue
 					if (i < indexThreshold) potentialQueue.push(node);
 					else {
 						priorityQueue.push(node);
-					    priorityNodes2++;
+						priorityNodes++;
 					}
-						
+
 					break; // make sure node is not pushed twice into PQ
 				}
 			}
@@ -138,7 +146,7 @@ void ProcessTraceQue(CDEM& dem, Flag& flag, queue<Node>& traceQueue, PriorityQue
 			if (flag.IsProcessedDirect(iRow, iCol)) continue;
 			else {
 				priorityQueue.push(node);
-				priorityNodes2++;
+				priorityNodes++;
 				break;
 			}
 		}
@@ -152,8 +160,8 @@ void ProcessPit(CDEM& dem, Flag& flag, queue<Node>& depressionQue,
 	float iSpill;
 	Node N;
 	Node node;
-	int width = dem.Get_NX();
-	int height = dem.Get_NY();
+	const size_t width = dem.Get_NX();
+	const size_t height = dem.Get_NY();
 	while (!depressionQue.empty())
 	{
 		node = depressionQue.front();
@@ -183,8 +191,7 @@ void ProcessPit(CDEM& dem, Flag& flag, queue<Node>& depressionQue,
 		}
 	}
 }
-
-void fillDEM(const char* inputFile, const char* outputFilledPath)
+void fillDEM_Wei(const char* inputFile, const char* outputFilledPath)
 {
 	queue<Node> traceQueue;
 	queue<Node> depressionQue;
@@ -198,8 +205,8 @@ void fillDEM(const char* inputFile, const char* outputFilledPath)
 	}
 	std::cout << "Finish reading file" << endl;
 
-	int width = dem.Get_NX();
-	int height = dem.Get_NY();
+	const size_t width = static_cast<size_t>(dem.Get_NX());
+	const size_t height = static_cast<size_t>(dem.Get_NY());
 	std::cout << "Using our proposed variant to fill DEM" << endl;
 	auto timeStart = std::chrono::high_resolution_clock::now();
 	Flag flag;
@@ -252,11 +259,12 @@ void fillDEM(const char* inputFile, const char* outputFilledPath)
 			ProcessTraceQue(dem, flag, traceQueue, priorityQueue);
 		}
 	}
-	// ��¼����ʱ��  
+	// 记录结束时间  
 	auto timeEnd = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<double> consumeTime = timeEnd - timeStart;
 	cout << "Time used:" << consumeTime.count() << " seconds" << endl;
-	std::cout << "\n===== ���ȶ��д����Ľڵ��� =====\n" << priorityNodes2 << "\n";
+	std::cout << "\n===== 优先队列处理的节点数 =====\n" << priorityNodes << "\n";
+
 	double min, max, mean, stdDev;
 	calculateStatistics(dem, &min, &max, &mean, &stdDev);
 	CreateGeoTIFF(outputFilledPath, dem.Get_NY(), dem.Get_NX(),
