@@ -20,7 +20,7 @@ All algorithms work with **floating‑point GeoTIFF** DEMs and rely on the **GDA
 
 ## Compilation
 
-Using Visual Studio 2022 (Windows)
+1.Using Visual Studio 2022 (Windows)
 
 - Create a new empty C++ console project.
 - Add all `.cpp` and `.h` files to the project.
@@ -29,6 +29,30 @@ Using Visual Studio 2022 (Windows)
   - **VC++ Directories** → **Library Directories**: add GDAL's `lib` path.
   - **Linker** → **Input** → **Additional Dependencies**: add `gdal_i.lib` (or the appropriate library name).
 - Build as Release/x64.
+
+2.Using WSL Ubuntu
+- Install dependencies in WSL Ubuntu:
+ - sudo apt update
+ - sudo apt install -y build-essential cmake cmake-gui git
+ - sudo apt install -y libgdal-dev gdal-bin
+ - gdalinfo --version
+ - pkg-config --modversion gdal
+ - sudo apt install -y libtiff-dev libgeotiff-dev
+- Prepare project files:Create project directory (assuming the project is named DEM_Filling)
+ - cd ~
+ - mkdir DEM_Filling
+ - cd DEM_Filling
+- Copy all your .cpp and .h 、CMakeLists.txt files into this directory
+- File paths need to be modified to Linux path format：std::string filename = "/mnt/d/GIS_Data/aktin.tif";std::string outputFilename = "/mnt/d/GIS_Data/pp1.tif";
+- Configure the CMake project
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make -j$(nproc)
+  - ls -la bin/
+  - cd bin
+  - ./DEM_Filling
+
 
 ## Running the Program
 
