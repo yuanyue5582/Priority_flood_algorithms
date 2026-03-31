@@ -87,8 +87,8 @@ void calculateStatistics(const CDEM& dem, double* min, double* max, double* mean
 int main() {
     GDALAllRegister();
 
-    std::string filename = "D:\\GIS_Data\\aktin.tif";//E:\\gdal2.3.1-vc2019\\test.tif，D:\\ASTGTM_N32E104B.img，D:\\dem_3m_m1.img
-    std::string outputFilename = "D:\\GIS_Data\\pp1.tif";
+    std::string filename = "/home/root1/DEM_Filling/Data/aktin.tif";
+    std::string outputFilename = "/home/root1/DEM_Filling/Data/pp1.tif";
     
     int m = 3;
     
