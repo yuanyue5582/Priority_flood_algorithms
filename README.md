@@ -31,6 +31,8 @@ All algorithms work with **floating‑point GeoTIFF** DEMs and rely on the **GDA
 - Build as Release/x64.
 
 2.Using WSL Ubuntu
+- Run: wsl --install --web-download -d Ubuntu-24.04
+- restart the computer
 - Install dependencies in WSL Ubuntu:
  - sudo apt update
  - sudo apt install -y build-essential cmake cmake-gui git
