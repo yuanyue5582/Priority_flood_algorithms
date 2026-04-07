@@ -1,21 +1,39 @@
 MIT License
 
-Copyright (c) 2025 
+Copyright (c) 2025 [Jinling Institute of Technology]
+
+This repository supports the corresponding review paper on DEM depression-filling algorithms, and contains three categories of code:
+
+1. Third‑party open-source code redistributed from original authors
+We incorporate the publicly released open-source code from the following studies:
+- Barnes et al. (2014) — Computers & Geosciences
+- Wei et al. (2019) — Environmental Modelling & Software
+- Zhou et al. (2017) — Transactions in GIS
+These codes remain under their original licenses; all intellectual property belongs to the original authors. Any reuse must comply with their original license terms.
+
+2. Independent reimplementation based on published methodology
+The algorithm of Planchon & Darboux (2002) — Earth Surface Processes and Landforms
+is implemented by us purely according to the published principles and descriptions.
+No original source code from the authors was adopted or modified.
+
+3. Original framework and integration code
+The unified calling framework, interface wrappers, running scripts, comparison tools and auxiliary functions
+are fully developed by the authors of this review paper.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+copies of the Software, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+- The above copyright notice and full permission notice shall be included in all copies
+  or substantial portions of the Software.
+- When publishing or academic reuse of this Software, users shall cite both the original referenced papers
+  and the associated review paper of this repository.
+- For the third-party original code segments, users must strictly follow and respect their original open-source licenses.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
