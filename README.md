@@ -17,6 +17,7 @@ All algorithms work with **floating‑point GeoTIFF** DEMs and rely on the **GDA
 
 - **GDAL** (version ≥ 1.9.1 is recommended; tested with 3.7.0)
 - C++11 standard library (iostream, fstream, queue, algorithm, chrono, etc.)
+- g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
 
 ## Compilation
 
